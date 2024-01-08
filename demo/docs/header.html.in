@@ -1,0 +1,177 @@
+<!-- HTML header for doxygen 1.9.8-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="$langISO">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen $doxygenversion"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!--BEGIN PROJECT_NAME--><title>$projectname: $title</title><!--END PROJECT_NAME-->
+<!--BEGIN !PROJECT_NAME--><title>$title</title><!--END !PROJECT_NAME-->
+<link href="$relpath^tabs.css" rel="stylesheet" type="text/css"/>
+<!--BEGIN DISABLE_INDEX-->
+  <!--BEGIN FULL_SIDEBAR-->
+<script type="text/javascript">var page_layout=1;</script>
+  <!--END FULL_SIDEBAR-->
+<!--END DISABLE_INDEX-->
+<script>
+  class DoxSelector {
+    constructor(id) {
+      this.id = id;
+    }
+    digest(menu){
+      this._loadMain(menu);
+      this._loadReleaseCandidates(menu);
+      this._loadReleases(menu);
+      this._loadBranches(menu);
+    }
+    get _root(){
+      return document.getElementById(this.id);
+    }
+    _loadMain(menu){
+      try{
+        this._loadFirstOnly(menu, 'main');
+      } catch(error) {
+        console.log('Main not present');
+      } 
+    }
+    _loadReleaseCandidates(menu){
+      try{
+        this._loadGroup(menu, 'release-candidates', 'Release Candidates', this._descFunc);
+      } catch(error) {
+        console.log('No release candidate present');
+      }
+    }
+    _loadReleases(menu){
+      try{
+        this._loadGroup(menu, 'releases', 'Releases', this._descFunc);
+      } catch(error) {
+        console.log('No releases present');
+      }
+    }
+    _loadBranches(menu){
+      try{
+        this._loadGroup(menu, 'branches', 'Active Development');
+      } catch(error) {
+        console.log('No branches under active development');
+      }
+    }
+    _loadGroup(menu, category, displayName=null, sortFunc=this._ascFunc){
+      const group = menu[category];
+      const id = (displayName == null) ? this.id : this._createGroup(category, displayName);
+      group.toSorted(sortFunc)
+           .forEach(entry => this._addItem(id, entry) );
+    }
+    _ascFunc(a, b){
+      return (a['name'] >= b['name']) ? 0 : -1;
+    }
+    _descFunc(a, b){
+      return (b['name'] >= a['name']) ? 0 : -1;
+    }
+    _loadFirstOnly(menu, category, displayName=null, sortFunc=this._ascFunc){
+      const group = menu[category];
+      const id = (displayName == null) ? this.id : this._createGroup(category, displayName);
+      const entry = group.toSorted(sortFunc)[0];
+      this._addItem(id, entry);
+    }
+    _createGroup(name, displayName){
+      const groupId = "group-" + name;
+      let group = document.createElement("optgroup");
+      group.setAttribute("label", displayName);
+      group.setAttribute("id", groupId);
+      this._root.appendChild(group);
+      return groupId;
+    }
+    _addItem(groupId, item){
+      let option = document.createElement("option");
+      option.setAttribute("value", item['path']);
+      option.insertAdjacentText("afterbegin", item['name']);
+      let group = document.getElementById(groupId);
+      group.appendChild(option);
+    }
+  }
+  function update(selection) {
+      console.log("The selected view is " + selection);
+      window.location.assign(selection);
+  }
+  function populateMenu(menu){
+      console.log(menu); 
+      let d = new DoxSelector('myselect')
+      d.digest(menu)
+      const select = document.getElementById('myselect');
+  }
+  function loadMenu(){
+      fetch("http://localhost:8081/contents/0.0.0")
+          .then((response) => response.json())
+          .then((json) => populateMenu(json));
+  }
+  window.addEventListener('load', function () {
+    console.log("Loading menu..")
+    loadMenu();
+  })
+</script>
+<script type="text/javascript" src="$relpath^jquery.js"></script>
+<script type="text/javascript" src="$relpath^dynsections.js"></script>
+$treeview
+$search
+$mathjax
+$darkmode
+<link href="$relpath^$stylesheet" rel="stylesheet" type="text/css" />
+$extrastylesheet
+</head>
+<body>
+<!--BEGIN DISABLE_INDEX-->
+  <!--BEGIN FULL_SIDEBAR-->
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
+  <!--END FULL_SIDEBAR-->
+<!--END DISABLE_INDEX-->
+
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+
+<!--BEGIN TITLEAREA-->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <!--BEGIN PROJECT_LOGO-->
+  <td id="projectlogo"><img alt="Logo" src="$relpath^$projectlogo"/></td>
+  <!--END PROJECT_LOGO-->
+  <!--BEGIN PROJECT_NAME-->
+  <td id="projectalign">
+   <div id="projectname" width="800px">$projectname<!--BEGIN PROJECT_NUMBER--><span id="projectnumber">&#160;$projectnumber</span><!--END PROJECT_NUMBER-->
+   </div>
+   <!--BEGIN PROJECT_BRIEF--><div id="projectbrief">$projectbrief</div><!--END PROJECT_BRIEF-->
+  </td>
+  <!--END PROJECT_NAME-->
+  <!--BEGIN !PROJECT_NAME-->
+   <!--BEGIN PROJECT_BRIEF-->
+    <td>
+    <div id="projectbrief">$projectbrief</div>
+    </td>
+   <!--END PROJECT_BRIEF-->
+  <!--END !PROJECT_NAME-->
+  <!--BEGIN DISABLE_INDEX-->
+   <!--BEGIN SEARCHENGINE-->
+     <!--BEGIN !FULL_SIDEBAR-->
+    <td>$searchbox</td>
+     <!--END !FULL_SIDEBAR-->
+   <!--END SEARCHENGINE-->
+  <!--END DISABLE_INDEX-->
+ </tr>
+  <!--BEGIN SEARCHENGINE-->
+   <!--BEGIN FULL_SIDEBAR-->
+   <tr><td colspan="2">$searchbox</td></tr>
+   <!--END FULL_SIDEBAR-->
+  <!--END SEARCHENGINE-->
+ </tbody>
+</table>
+</div>
+<!--END TITLEAREA-->
+<!-- end header part -->
+<div style="margin: 10px;">
+  <form>
+    Ver: <select name="myselect" id="myselect" onChange="update(this.value)">
+      <option value="">@APP_VERSION@</option>
+    </select>
+  </form>
+</div>

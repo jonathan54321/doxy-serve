@@ -1,0 +1,94 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "inputs": [
+      {
+        "type": "pickString",
+        "id": "container",
+        "description": "Connect to..",
+        "options": [
+          "etl",
+          "nginx",
+          "dev"
+        ],
+        "default": "dev"
+      },
+    ],
+    "tasks": [
+      {
+        "label": "Rebuild and restart services",
+        "type": "shell",
+        "command": "docker-compose up --build -d",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Rebuild and restart container..",
+        "type": "shell",
+        "command": "docker-compose",
+        "args": ["up", "--build", "${input:container}"],
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },      
+      {
+        "label": "Restart container..",
+        "type": "shell",
+        "command": "docker-compose",
+        "args": ["restart", "${input:container}"],
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Connect to container..",
+        "type": "shell",
+        "command": "docker-compose",
+        "args": ["exec", "${input:container}", "/bin/bash"],
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Display container's logs..",
+        "type": "shell",
+        "command": "docker-compose",
+        "args": ["logs", "-t", "${input:container}"],
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Test e2e",
+        "type": "shell",
+        "command": "docker-compose exec dev python populate_dox.py",
+        "presentation": {
+          "reveal": "always",
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Clean-up",
+        "type": "shell",
+        "command": "${command:python.interpreterPath} ./tests/cleanup.py",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      }
+    ]
+  }

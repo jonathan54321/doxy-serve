@@ -1,0 +1,6 @@
+types {
+    text/html				html htm shtml;
+    text/javascript			es js mjs;
+    image/svg+xml           svg svgz;
+    text/css				css;
+}

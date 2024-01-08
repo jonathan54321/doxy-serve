@@ -1,0 +1,35 @@
+version: "3.7"
+services:
+  nginx:
+    container_name: "nginx"
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx:/etc/nginx
+      - ./www/static:/data/www/static
+  etl:
+    container_name: "etl"
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8081:5000"
+    volumes:
+      - ./etl:/data/www/app
+      - ./www:/data/www
+    entrypoint: ['python', '/data/www/app/myproject.py']
+  dev:
+    build: 
+      context: ./demo
+      dockerfile: Dockerfile
+    volumes:
+      - ./demo/src:/code/src
+      - ./demo/docs:/code/docs
+      - ./demo/CMakeLists.txt:/code/CMakeLists.txt
+      - ./demo/entrypoint.sh:/code/entrypoint.sh
+      - ./tests/populate_dox.py:/code/populate_dox.py
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
