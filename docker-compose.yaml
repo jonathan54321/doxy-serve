@@ -18,9 +18,9 @@ services:
     ports:
       - "8081:5000"
     volumes:
-      - ./etl:/data/www/app
+      - ./etl/src:/data/www/app
       - ./www:/data/www
-    entrypoint: ['python', '/data/www/app/myproject.py']
+    entrypoint: ['python', '/data/www/app/app.py']
   dev:
     build: 
       context: ./demo

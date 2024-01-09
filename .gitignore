@@ -1,2 +1,4 @@
 /www/uploads/**
 /www/static/docs/**
+www/db.json
+**/*.pyc
