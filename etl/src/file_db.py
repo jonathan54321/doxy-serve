@@ -59,8 +59,7 @@ class FilesDatabase:
     
 
 class RelativePathTransform:
-    def __init__(self, logger, db:FilesDatabase, name:str, base:Path):
-        self._name = name
+    def __init__(self, logger, db:FilesDatabase, base:Path):
         self._base = base
         self._db = db
         self._logger = logger
@@ -71,8 +70,8 @@ class RelativePathTransform:
         else:
             return self._relative_path_to_base(rel / Path(".."), path.parent)
 
-    def _to_relative(self, entry:FilesDatabase.Entry):
-        my_abs_path = self._db.to_path(self._name)
+    def _to_relative(self, name:str, entry:FilesDatabase.Entry):
+        my_abs_path = self._db.to_path(name)
         try:
             my_rel_path = self._relative_path_to_base( Path(''), my_abs_path.parent)
             rel_path = entry.path.relative_to(self._base)
@@ -81,12 +80,12 @@ class RelativePathTransform:
             self._logger.error(f"Unable to find a relative path {str(e)}")
             return entry.path 
  
-    def get_relative_to(self, category:str):
-        filtered = filter(lambda e: e.name != self._name, self._db.by_category(category))
-        contents = map(lambda e: {'name': e.name, 'path':self._to_relative(e)}, filtered)
+    def get_relative_to(self, name:str, category:str):
+        filtered = filter(lambda e: e.name != name, self._db.by_category(category))
+        contents = map(lambda e: {'name': e.name, 'path':self._to_relative(name, e)}, filtered)
         return [c for c in contents]
         
-    def get_categorized_relative_to(self):
-        contents = {category: self.get_relative_to(category) for category in self._db.categories}
+    def get_categorized_relative_to(self, name:str):
+        contents = {category: self.get_relative_to(name, category) for category in self._db.categories}
         self._logger.info(str(contents))
         return contents

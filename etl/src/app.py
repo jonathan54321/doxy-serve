@@ -1,12 +1,11 @@
 from file_db import FilesDatabase, RelativePathTransform
 import os
 from pathlib import Path
-from flask import Flask, flash, request, redirect, url_for, Response
+from flask import Flask,  request, Response
 from werkzeug.utils import secure_filename
 import json
 from zipfile import ZipFile
 import logging
-from pprint import pprint
 
 
 UPLOAD_FOLDER = Path('/data/www/uploads')
@@ -74,14 +73,11 @@ def upload_file():
     return result
 
 
-@app.route("/")
-def hello():
-    return "<h1 style='color:blue'>Hello World!</h1>"
-
 @app.route("/contents/<name>")
 def retrieve_contents(name:str):
-    paths = RelativePathTransform(app.logger, FilesDatabase(DB_PATH), name, DOCS_DIR)
-    resp = Response(json.dumps(paths.get_categorized_relative_to()))
+    paths = RelativePathTransform(app.logger, FilesDatabase(DB_PATH), DOCS_DIR)
+    resp_json = json.dumps(paths.get_categorized_relative_to(name)
+    resp = Response(resp_json)
     #resp.headers['Access-Control-Allow-Origin'] = 'http://localhost:8080'
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
